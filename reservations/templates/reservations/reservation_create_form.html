@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class= "content-section">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-outline-info" type="submit" value="save"/>
+        </form>
+    </div>
+
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+    {% if messages %}
+
+         {{ message }}
+
+    {% else %}
+    <article class="media content-section">
+     <div class="media-body">
+       <div class="alert alert-success" role="alert">
+            <h7 class="alert-heading">Thanks you have paid <strong> $ {{payment.total_due}}!</strong> for your reservation {{payment.confirmation_code}}</h7>
+       </div>
+     </div>
+    </article>
+
+    {% endif %}
+
+{% endblock content %}

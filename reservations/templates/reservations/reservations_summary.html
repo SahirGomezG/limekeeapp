@@ -1,0 +1,39 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+        <div class="col-md-14">
+          <div class="content-section">
+              <div class="table-responsive" style="font-size: 10px">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th scope="col">Confirmation Code</th>
+                          <th scope="col">Guest</th>
+                          <th scope="col">Check-In</th>
+                          <th scope="col">Check-Out</th>
+                          <th scope="col">Payout</th>
+                          <th scope="col">Limekee Fee</th>
+                          <th scope="col">Cleaning Fee</th>
+                          <th scope="col">Total Due</th>
+                      </tr>
+                  </thead>   <!-- if reservation.host == user -->
+                  {% for reservation in reservations %}
+                  <tbody>
+                      <tr>
+                          <th scope="row">{{ reservation.confirmation_code }}</th>
+                          <td>{{ reservation.guest }}</td>
+                          <td>{{ reservation.check_in }}</td>
+                          <td>{{ reservation.check_out }}</td>
+                          <td>{{ reservation.price }}</td>
+                          <td>{{ reservation.limekee_fee }}</td>
+                          <td>{{ reservation.cleaning_fee }}</td>
+                          <td>{{ reservation.total_due }}</td>
+                     </tr>
+                 </tbody>
+                 {% endfor %}
+             </table>
+             </div>
+           </div>
+         </div>
+
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+    <div class="shadow-sm p-3 mb-5 bg-white rounded">
+      <article class="media content-section">
+        <!-- <img class="rounded-circle account-img" src="{{ object.host.profile.image.url }}" alt="Author picture"> -->
+         <div class="media-body">
+
+            <h5 class="article-title" > Reservation: {{ object.confirmation_code }}</h5>
+            <p class="article-content">Guest: {{ object.guest }} </p>
+
+            <div class="table-responsive" >
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Payout</th>
+                        <th scope="col">Cleaning Fee</th>
+                        <th scope="col">Limekee Fee</th>
+                        <th scope="col">Total Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ object.price }}</th>
+                        <td>{{ object.cleaning_fee }}</td>
+                        <td>{{ object.limekee_fee }}</td>
+                        <td>{{ object.total_due }}</td>
+                   </tr>
+               </tbody>
+           </table>
+           </div>
+
+<!--  Stripe Payment Button -->
+
+        {% if object.host == user %}
+        {% if object.paid == False %}
+            <div >
+              <form action="{% url 'charge-reservation' reservation.pk %}" method="post">
+                  {% csrf_token %}
+              <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ key }}"
+                  data-image="/media/logo_op1B.jpg"
+                  data-description="Limekee Charge"
+                  data-amount="{{object.total_due_for_stripe}}"
+                  data-locale="auto"
+                  data-email="{{user.email}}"
+              </script>
+              </form>
+            </div>
+        {% endif %}
+        {% endif %}
+
+       </div>
+     </article>
+     </div>
+{% endblock content %}

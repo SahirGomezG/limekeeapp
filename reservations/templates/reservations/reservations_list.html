@@ -1,0 +1,72 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+  {% if reservations %}
+      {% for reservation in reservations %}
+
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                  <h5 class="article-title"> <a class="mr-2" href="{% url 'reservation-detail' reservation.pk %}">  {{ reservation.confirmation_code }}</a></h5>
+                </div>
+
+                <div class="table-responsive" >
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Guest</th>
+                            <th scope="col">Check-In</th>
+                            <th scope="col">Check-Out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{ reservation.guest }}</th>
+                            <td>{{ reservation.check_in }}</td>
+                            <td>{{ reservation.check_out }}</td>
+                       </tr>
+                   </tbody>
+               </table>
+               </div>
+               <p class="article-content">  Your payout was <strong>$ {{ reservation.price }}</strong></p>
+               {% if reservation.paid  %}
+               <div class="alert alert-success" role="alert">
+                  Paid
+               </div>
+               {% else %}
+               <div class="alert alert-danger" role="alert">
+                 Unpaid
+                </div>
+               {% endif %}
+
+            </div>
+        </article>
+      {% endfor %}
+  {% else %}
+    <div class="alert alert-info" role="alert"> <h4 class="alert-heading">Huh ! </h4>Currently, you don't have any reservations registered with Limekee. <br> Your property manager will update shortly.</div>
+  {% endif %}
+
+
+  {% if is_paginated %}
+    <div style="text-align: center;">
+        {% if page_obj.has_previous %}
+           <a class="btn btn-outline-dark mb-4 btn-sm" href="?page=1">First</a>
+           <a class="btn btn-outline-dark mb-4 btn-sm" href="?page={{ page_obj.previous_page_number }}"><</a>
+        {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-dark mb-4 btn-sm" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-1' and num < page_obj.number|add:'1' %}
+            <a class="btn btn-outline-dark mb-4 btn-sm" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+           <a class="btn btn-outline-dark mb-4 btn-sm" href="?page={{ page_obj.next_page_number }}">></a>
+           <a class="btn btn-outline-dark mb-4 btn-sm" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+  {% endif %}
+{% endblock content %}
