@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .forms import ReservationForm
 
 from .models import Reservations
@@ -151,6 +151,25 @@ def metrics (request):
    graphic = graphic.decode('utf-8')
 
    return render(request, 'reservations/reservations_metrics.html', {'graphic':graphic})
+
+class Progress(View):
+    def get(self, request, *args, **kwargs):
+        date = []
+        payout =[]
+        confirmation_code = []
+        for e in Reservations.objects.filter(host=request.user).order_by('check_in').values_list("price",flat=True):
+            payout.append(int(e))
+        for i in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_in',flat=True):
+            date.append(str(i))
+        for code in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('confirmation_code',flat=True):
+            confirmation_code.append(str(code))
+
+        return render(request, 'reservations/reservations_progress.html',
+        {
+            'labels': confirmation_code,
+            'date' : date,
+            'reservations' : payout,
+        })
 
 @login_required()
 def global_list (request):
