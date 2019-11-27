@@ -15,6 +15,11 @@ from django.db.models import Sum, F
 from django.conf import settings
 from django.views.generic.base import TemplateView
 
+import time
+from io import BytesIO
+import base64
+from matplotlib import pyplot as plt
+import numpy as np
 
 stripe_pub = settings.STRIPE_PUBLISHABLE_KEY
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -119,6 +124,33 @@ def summary (request):
         'reservations': Reservations.objects.filter(host=my_user_profile)
         }
     return render(request, 'reservations/reservations_summary.html', context )
+
+@login_required()
+def metrics (request):
+   date_data = Reservations.objects.filter(host=request.user).order_by('-check_in').values_list("check_in")
+   payout_data = Reservations.objects.filter(host=request.user).values_list("price")
+
+   plt.style.use('ggplot')
+
+   plt.plot_date(date_data, payout_data, linestyle = 'solid')
+
+   plt.gcf().autofmt_xdate()
+   plt.title('My Payouts')
+   plt.xlabel('Date')
+   plt.ylabel('Payout ($)')
+
+   plt.tight_layout()
+   buffer = BytesIO()
+   plt.savefig(buffer, format='png')
+   buffer.seek(0)
+   image_png = buffer.getvalue()
+   buffer.close()
+   plt.clf()
+
+   graphic = base64.b64encode(image_png)
+   graphic = graphic.decode('utf-8')
+
+   return render(request, 'reservations/reservations_metrics.html', {'graphic':graphic})
 
 @login_required()
 def global_list (request):

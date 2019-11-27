@@ -12,6 +12,7 @@ urlpatterns = [
     path('<slug:pk>', ReservationDetailView.as_view(), name='reservation-detail'),
     #path('<slug:pk>/payment', HomePageView.as_view(), name='home-payment-'),
     path('processed/<slug:pk>/', views.charge, name='charge-reservation'),
+    path('reservations_metrics/', views.metrics, name='reservations-metrics'),
     path('reservations_summary/', views.summary, name='reservations-summary'),
     path('reservations_global/', views.global_list, name='reservations-global-list'),
     path('reservation_create_form/', views.reservation_create_form, name='reservation1'),
