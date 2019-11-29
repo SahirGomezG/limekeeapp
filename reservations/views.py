@@ -21,6 +21,8 @@ import base64
 from matplotlib import pyplot as plt
 import numpy as np
 
+import calendar
+
 stripe_pub = settings.STRIPE_PUBLISHABLE_KEY
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -157,6 +159,13 @@ class Progress(View):
         date = []
         payout =[]
         confirmation_code = []
+        month_data = []
+        month_list = [i.month for i in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_in', flat=True)]
+
+        # Convert month to String
+        for mes in month_list:
+            month_data.append(calendar.month_abbr[mes])
+
         for e in Reservations.objects.filter(host=request.user).order_by('check_in').values_list("price",flat=True):
             payout.append(int(e))
         for i in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_in',flat=True):
@@ -164,11 +173,24 @@ class Progress(View):
         for code in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('confirmation_code',flat=True):
             confirmation_code.append(str(code))
 
+        # Dictionary of sum of Payouts by month
+        payout_by_month = {}
+        for key, value in zip(month_data,payout):
+            try:
+                payout_by_month[key] += value
+            except KeyError:
+                payout_by_month[key] = value
+
+        payout_in_month = list(payout_by_month.values())
+        month =list(payout_by_month.keys())
+
         return render(request, 'reservations/reservations_progress.html',
         {
             'labels': confirmation_code,
             'date' : date,
-            'reservations' : payout,
+            'payout' : payout,
+            'month': month,
+            'payout_in_month': payout_in_month,
         })
 
 @login_required()
