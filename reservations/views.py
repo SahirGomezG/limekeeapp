@@ -68,6 +68,8 @@ class ReservationDetailView(DetailView):
 @login_required()
 def charge(request,pk):
     reservation = Reservations.objects.get(confirmation_code = pk)
+    this_user = User.objects.get(username=request.user)
+    email = request.user.email
 
     if request.method == 'POST':
         try:
@@ -75,7 +77,8 @@ def charge(request,pk):
                 amount = 100*int(reservation.total_due),
                 currency='usd',
                 description=f'Reservation: {reservation.confirmation_code}',
-                source=request.POST['stripeToken']
+                source=request.POST['stripeToken'],
+                receipt_email=email,
             )
             reservation.paid = True
             reservation.save()
