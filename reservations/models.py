@@ -15,16 +15,17 @@ class Reservations(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=1000)
     limekee_fee = models.DecimalField(decimal_places=2, max_digits=1000, blank=True, null=False, default=0)
     cleaning_fee = models.DecimalField (decimal_places=2, max_digits=1000, blank=True, null=False, default=0)
+    extra_fee = models.DecimalField (decimal_places=2, max_digits=1000, blank=True, null=False, default=0)
     total_due = models.DecimalField( decimal_places=2, max_digits=1000, default=0)
     notes = models.TextField(blank=True,null=False)
     paid = models.BooleanField(default=False)
 
     @property
     def total_due(self):
-        return (self.limekee_fee + self.cleaning_fee)
+        return (self.limekee_fee + self.cleaning_fee + self.extra_fee)
 
     def total_due_for_stripe(self):
-        return (self.limekee_fee + self.cleaning_fee )*100
+        return (self.limekee_fee + self.cleaning_fee + self.extra_fee)*100
 
     def __str__(self):
         return f'Reservation: {self.confirmation_code}'

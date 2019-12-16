@@ -14,6 +14,7 @@
                           <th scope="col">Payout</th>
                           <th scope="col">Limekee Fee</th>
                           <th scope="col">Cleaning Fee</th>
+                          <th scope="col">Extra Services</th>
                           <th scope="col">Total Due</th>
                       </tr>
                   </thead>   <!-- if reservation.host == user -->
@@ -24,10 +25,11 @@
                           <td>{{ reservation.guest }}</td>
                           <td>{{ reservation.check_in }}</td>
                           <td>{{ reservation.check_out }}</td>
-                          <td>{{ reservation.price }}</td>
-                          <td>{{ reservation.limekee_fee }}</td>
-                          <td>{{ reservation.cleaning_fee }}</td>
-                          <td>{{ reservation.total_due }}</td>
+                          <td>${{ reservation.price }}</td>
+                          <td>${{ reservation.limekee_fee }}</td>
+                          <td>${{ reservation.cleaning_fee }}</td>
+                          <td>${{ reservation.extra_fee }}</td>
+                          <td>${{ reservation.total_due }}</td>
                      </tr>
                  </tbody>
                  {% endfor %}
