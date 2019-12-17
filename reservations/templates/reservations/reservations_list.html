@@ -34,8 +34,15 @@
                   Paid
                </div>
                {% else %}
-               <div class="alert alert-danger" role="alert">
-                 Unpaid
+	       <div class="d-flex align-items-center bd-highlight justify-content-between alert alert-danger p-1" role="alert">
+                      <div class="p-2 bd-highlight">
+                          Unpaid
+                      </div>
+                      <div class="p-2 bd-highlight">
+                        <a class="mr-2" href="{% url 'reservation-detail' reservation.pk %}">
+                            <button type="button" class="btn btn-success btn-sm" style="font-size:9px">Pay here</button>
+                        </a>
+                      </div>
                 </div>
                {% endif %}
 
