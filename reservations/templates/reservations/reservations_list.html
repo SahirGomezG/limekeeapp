@@ -7,12 +7,12 @@
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                  <h5 class="article-title"> <a class="mr-2" href="{% url 'reservation-detail' reservation.pk %}">  {{ reservation.confirmation_code }}</a></h5>
+                  <h6 class="article-title"> <a class="mr-2" href="{% url 'reservation-detail' reservation.pk %}">  {{ reservation.confirmation_code }}</a></h6>
                 </div>
 
-                <div class="table-responsive" >
+                <div class="table-responsive" style="font-size:11px">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="thead-light">
                         <tr>
                             <th scope="col">Guest</th>
                             <th scope="col">Check-In</th>
