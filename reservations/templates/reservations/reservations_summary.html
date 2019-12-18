@@ -16,6 +16,7 @@
                           <th scope="col" class="align-middle">Cleaning Fee</th>
                           <th scope="col" class="align-middle">Extra Services</th>
                           <th scope="col" class="align-middle">Total</th>
+                          <th scope="col" class="align-middle">Status </th>
                       </tr>
                   </thead>   <!-- if reservation.host == user -->
                   {% for reservation in reservations %}
@@ -30,6 +31,15 @@
                           <td>${{ reservation.cleaning_fee }}</td>
                           <td>${{ reservation.extra_fee }}</td>
                           <td>${{ reservation.total_due }}</td>
+                          {% if reservation.paid  %}
+                          <td>Paid</td>
+                          {% else %}
+                          <td>
+                              <a href="{% url 'reservation-detail' reservation.pk %}">
+                                <button type="button" class="btn btn-success btn-sm" style="font-size:8px">Pay</button>
+                              </a>
+                          </td>
+                          {% endif %}
                      </tr>
                  </tbody>
                  {% endfor %}
