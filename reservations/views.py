@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 import calendar
+import json
 
 stripe_pub = settings.STRIPE_PUBLISHABLE_KEY
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -126,7 +127,7 @@ def reservation_create_form (request):
 def summary (request):
     my_user_profile = User.objects.filter(username=request.user).first()
     context = {
-        'reservations': Reservations.objects.filter(host=my_user_profile)
+        'reservations': Reservations.objects.filter(host=my_user_profile).order_by('-check_in')
         }
     return render(request, 'reservations/reservations_summary.html', context )
 
@@ -194,6 +195,29 @@ class Progress(View):
             'payout' : payout,
             'month': month,
             'payout_in_month': payout_in_month,
+        })
+
+class Calendar(View):
+    def get(self, request, *args, **kwargs):
+        guest = []
+        check_in = []
+        check_out = []
+
+        reservations = Reservations.objects.filter(host=request.user).order_by('-check_in')
+        for a in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('guest',flat=True):
+            guest.append(a)
+        for i in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_in',flat=True):
+            check_in.append(str(i))
+        for e in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_out',flat=True):
+            check_out.append(str(e))
+
+        data = [{'title':title, 'start': start, 'end': end} for title, start, end in zip(guest, check_in, check_out)]
+        json_data = json.dumps(data)
+
+        return render(request, 'reservations/reservations_calendar.html',
+        {
+            'reservations': reservations,
+            'data':json_data,
         })
 
 @login_required()

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ReservationListView, ReservationDetailView, ReservationUpdateView, UserReservationListView, Progress
+from .views import ReservationListView, ReservationDetailView, ReservationUpdateView, UserReservationListView, Progress, Calendar
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -17,5 +17,6 @@ urlpatterns = [
     path('reservations_summary/', views.summary, name='reservations-summary'),
     path('reservations_global/', views.global_list, name='reservations-global-list'),
     path('reservation_create_form/', views.reservation_create_form, name='reservation1'),
+    path('reservations_calendar/', Calendar.as_view(), name='reservations-calendar'),
 
 ]
