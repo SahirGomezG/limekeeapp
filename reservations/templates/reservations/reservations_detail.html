@@ -1,6 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
 
+ {% if object.host == user %}
   <div class="col-md-14">
    <div class="content-section">
        <div class="media-body">
@@ -53,4 +54,5 @@
        </div>
      </div>
    </div>
+ {% endif %}
 {% endblock content %}

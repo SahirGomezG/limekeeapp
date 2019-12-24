@@ -202,6 +202,7 @@ class Calendar(View):
         guest = []
         check_in = []
         check_out = []
+        pk = []
 
         reservations = Reservations.objects.filter(host=request.user).order_by('-check_in')
         for a in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('guest',flat=True):
@@ -210,8 +211,12 @@ class Calendar(View):
             check_in.append(str(i))
         for e in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('check_out',flat=True):
             check_out.append(str(e))
+        for r in Reservations.objects.filter(host=request.user).order_by('check_in').values_list('confirmation_code',flat=True):
+            pk.append(r)
 
-        data = [{'title':title, 'start': start, 'end': end} for title, start, end in zip(guest, check_in, check_out)]
+        urls = [ 'https://www.limekeeapp.com/reservation/'+i  for i in pk]
+
+        data = [{'title':title, 'start': start, 'end': end, 'url': url} for title, start, end, url in zip(guest, check_in, check_out, urls)]
         json_data = json.dumps(data)
 
         return render(request, 'reservations/reservations_calendar.html',
