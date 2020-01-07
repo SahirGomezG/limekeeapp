@@ -30,12 +30,21 @@
                </tbody>
            </table>
            </div>
+           <div class="row align-items-center">
+<!-- Notes section -->
+               <div class="col">
+                   {% if object.notes %}
+                   <div class="card card-body" style="font-size:12px">
+                     <strong>Note: </strong>{{ object.notes }}
+                   </div>
+                   {% endif %}
+               </div>
 
 <!--  Stripe Payment Button -->
 
         {% if object.host == user %}
         {% if object.paid == False %}
-            <div >
+            <div class="col-md-auto">
               <form action="{% url 'charge-reservation' reservation.pk %}" method="post">
                   {% csrf_token %}
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -50,7 +59,7 @@
             </div>
         {% endif %}
         {% endif %}
-
+         </div>
        </div>
      </div>
    </div>
